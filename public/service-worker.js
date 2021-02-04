@@ -36,7 +36,10 @@ self.addEventListener("activate", function (evt) {
             return caches.delete(key);
           }
         })
-      );
+      )
+      .catch(err => {
+        const catcher = 0;
+      });
     })
   );
 
@@ -53,6 +56,9 @@ self.addEventListener("fetch", function (evt) {
       caches.open(DATA_CACHE_NAME).then((cache) => {
         cache.put(evt.request, response.clone());
         return response;
+      })
+      .catch(err => {
+        const catcher = 0;
       })
     );
   }
@@ -90,48 +96,48 @@ self.addEventListener("fetch", function (evt) {
 });
 
 // Use webpack to put this in a separate file
-function useIndexedDb(databaseName, storeName, method, object) {
-  return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open(databaseName, 1);
-    let db,
-      tx,
-      store;
+// function useIndexedDb(databaseName, storeName, method, object) {
+//   return new Promise((resolve, reject) => {
+//     const request = window.indexedDB.open(databaseName, 1);
+//     let db,
+//       tx,
+//       store;
 
-    request.onupgradeneeded = function(e) {
-      const db = request.result;
-      db.createObjectStore(storeName, { keyPath: "_id" });
-    };
+//     request.onupgradeneeded = function(e) {
+//       const db = request.result;
+//       db.createObjectStore(storeName, { keyPath: "_id" });
+//     };
 
-    request.onerror = function(e) {
-      console.log("There was an error");
-    };
+//     request.onerror = function(e) {
+//       console.log("There was an error");
+//     };
 
-    request.onsuccess = function(e) {
-      db = request.result;
-      tx = db.transaction(storeName, "readwrite");
-      store = tx.objectStore(storeName);
+//     request.onsuccess = function(e) {
+//       db = request.result;
+//       tx = db.transaction(storeName, "readwrite");
+//       store = tx.objectStore(storeName);
 
-      db.onerror = function(e) {
-        console.log("error");
-      };
-      if (method === "put") {
-        store.put(object);
-      }
-      if (method === "clear") {
-        store.clear();
-      }
-      if (method === "get") {
-        const all = store.getAll();
-        all.onsuccess = function() {
-          resolve(all.result);
-        };
-      }
-      tx.oncomplete = function() {
-        db.close();
-      };
-    };
-  });
-}
+//       db.onerror = function(e) {
+//         console.log("error");
+//       };
+//       if (method === "put") {
+//         store.put(object);
+//       }
+//       if (method === "clear") {
+//         store.clear();
+//       }
+//       if (method === "get") {
+//         const all = store.getAll();
+//         all.onsuccess = function() {
+//           resolve(all.result);
+//         };
+//       }
+//       tx.oncomplete = function() {
+//         db.close();
+//       };
+//     };
+//   });
+// }
 
 
 

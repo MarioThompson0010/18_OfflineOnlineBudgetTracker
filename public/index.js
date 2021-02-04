@@ -13,6 +13,9 @@ fetch("/api/transaction")
     populateTotal();
     populateTable();
     populateChart();
+  })
+  .catch(err => {
+    const catcher = 0;
   });
 
 function populateTotal() {
@@ -147,7 +150,12 @@ function sendTransaction(isAdding) {
 }
 
 function saveRecord(transaction) {
-  useIndexedDb("budget", "data-cache-v1", "put", transaction);
+  useIndexedDb("budget", "data-cache-v1", "put", transaction).then(myresult => {
+    const catcher = 0;
+  })
+  .catch(err => {
+    const catcher = 0;
+  });
 }
 
 document.querySelector("#add-btn").onclick = function (event) {
@@ -204,6 +212,9 @@ window.addEventListener('online', function (e) {
                 populateTable();
                 populateChart();
                 useIndexedDb("budget", "data-cache-v1", "clear");
+              })
+              .catch(err => {
+                const catcher = 0;
               });
           }
         })
@@ -214,6 +225,9 @@ window.addEventListener('online', function (e) {
           nameEl.value = "";
           amountEl.value = "";
         });
+    })
+    .catch(err => {
+      const catcher = 0;
     });
 });
 
