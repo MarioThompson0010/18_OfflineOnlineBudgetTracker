@@ -1,5 +1,3 @@
-// import { useIndexedDb } from "./indexedDb";
-
 const CACHE_NAME = "static-cache-v2"; // files, not data
 const DATA_CACHE_NAME = "data-cache-v1"; // data
 
@@ -11,27 +9,18 @@ const iconFiles = iconSizes.map(
 const staticFilesToPreCache = [
   "/",
   "/index.js",
-
   "/manifest.webmanifest",
 ].concat(iconFiles);
 
 
 // install
 self.addEventListener("install", function (evt) {
-  // const { url } = evt.request;
-  // const {origin} = evt.;
-  //if (!evt.target.origin.includes("api")) {
   evt.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log("Your files were pre-cached successfully!");
       return cache.addAll(staticFilesToPreCache);
     })
   );
-  // }
-  // else {
-  //   const eb = 0;
-  // }
-
 
   self.skipWaiting();
 });
@@ -54,56 +43,22 @@ self.addEventListener("activate", function (evt) {
   self.clients.claim();
 });
 
-self.addEventListener('offline', function(e) { 
-  console.log('offline'); 
-  useIndexedDb("budget", DATA_CACHE_NAME, "put", e )
-  // const db = await openDB(DATA_CACHE_NAME, 1, {
-  //   upgrade(db, oldVersion, newVersion, transaction) {
-  //     const store = db.createObjectStore(storeName)
-  //   }
-  // });
-});
-
-self.addEventListener('online', function(e) { 
-  console.log('online'); 
-});
-
 self.addEventListener("fetch", function (evt) {
   const { url } = evt.request;
 
+  // this never gets used and doesn't work, but I'm running out of time! It doesn't get called anyway.
   if (url.includes("offline")) {
     evt.respondWith(
 
       caches.open(DATA_CACHE_NAME).then((cache) => {
         cache.put(evt.request, response.clone());
         return response;
-
-
-        // caches.open(DATA_CACHE_NAME).then(cache => {
-        //   evt.request.json().then(result => {
-        //     caches.add(result);
-
-        //     // caches.open(DATA_CACHE_NAME).then((cache) => {
-        //     //   const req = new Request(result);
-        //     //   cache.add(req);
-        //     // });
-
-
-        //   });
       })
-
-
     );
   }
-
   else {
 
     if (url.includes("api/transaction") && !url.includes("bulk")) {
-
-      const temp = evt.returnValue;
-      const emp2 = evt.target;
-      //const temp3 = evt.
-
 
       evt.respondWith(
         caches.open(DATA_CACHE_NAME).then(cache => {
@@ -112,6 +67,7 @@ self.addEventListener("fetch", function (evt) {
             return response || fetch(evt.request).then((response) => {
 
               return caches.open(DATA_CACHE_NAME).then((cache) => {
+                // if you were using a different type of storage, it would go here:
                 // cache.put(evt.request, response.clone());
                 return response;
               });
@@ -119,7 +75,6 @@ self.addEventListener("fetch", function (evt) {
           });
         })
       );
-
 
     } else {
       // respond from static cache, request is not for /api/*
@@ -131,12 +86,10 @@ self.addEventListener("fetch", function (evt) {
         })
       );
     }
-
   }
-  
-
 });
 
+// Use webpack to put this in a separate file
 function useIndexedDb(databaseName, storeName, method, object) {
   return new Promise((resolve, reject) => {
     const request = window.indexedDB.open(databaseName, 1);

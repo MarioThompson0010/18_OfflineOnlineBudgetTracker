@@ -1,53 +1,3 @@
-//import { useIndexedDb } from "./indexedDb";
-
-
-function useIndexedDb(databaseName, storeName, method, object) {
-  return new Promise((resolve, reject) => {
-    const request = window.indexedDB.open(databaseName, 1);
-    let db,
-      tx,
-      store;
-
-    request.onupgradeneeded = function (e) {
-      const db = request.result;
-      db.createObjectStore(storeName, { keyPath: "_id" });
-    };
-
-    request.onerror = function (e) {
-      console.log("There was an error");
-    };
-
-    request.onsuccess = function (e) {
-      db = request.result;
-      tx = db.transaction(storeName, "readwrite");
-      store = tx.objectStore(storeName);
-
-      db.onerror = function (e) {
-        console.log("error");
-      };
-      if (method === "put") {
-        store.put(object);
-      }
-      if (method === "clear") {
-        store.clear();
-      }
-      if (method === "get") {
-        const all = store.getAll();
-        all.onsuccess = function () {
-          resolve(all.result);
-        };
-      }
-      tx.oncomplete = function () {
-        db.close();
-      };
-    };
-  });
-}
-
-
-
-
-
 
 let transactions = [];
 let myChart;
@@ -194,16 +144,9 @@ function sendTransaction(isAdding) {
       nameEl.value = "";
       amountEl.value = "";
     });
-
 }
 
-
 function saveRecord(transaction) {
-
-  // useIndexedDb("favorites", "FavoritesStore", "get").then(results => {
-  //   //createCards(results);
-  // });
-
   useIndexedDb("budget", "data-cache-v1", "put", transaction);
 }
 
@@ -225,13 +168,11 @@ window.addEventListener('online', function (e) {
         let transaction = {
           name: elem.name,
           value: elem.value,
-          date: elem.date //new Date().toISOString()
+          date: elem.date
         };
+
         return transaction;
-
-
       });
-
 
       // also send to server
       fetch("/api/transaction/bulk", {
@@ -251,7 +192,6 @@ window.addEventListener('online', function (e) {
           }
           else {
 
-
             fetch("/api/transaction")
               .then(response => {
                 return response.json();
@@ -263,31 +203,18 @@ window.addEventListener('online', function (e) {
                 populateTotal();
                 populateTable();
                 populateChart();
-                useIndexedDb("budget", "data-cache-v1", "clear")
+                useIndexedDb("budget", "data-cache-v1", "clear");
               });
-            // clear form
           }
         })
         .catch(result => {
           // fetch failed, so save in indexed db
           const resul = result;
-          // saveRecord(transaction);
-          //return result.json();
-          // clear form
           errorEl.textContent = "Missing Information";
           nameEl.value = "";
           amountEl.value = "";
         });
-
-
-
-      // create record
-
-
-
-
     });
-
 });
 
 
@@ -302,8 +229,6 @@ function useIndexedDb(databaseName, storeName, method, object) {
       const db = request.result;
       db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
     };
-
-    // , { keyPath: "_id", autoIncrement: true }
 
     request.onerror = function (e) {
       console.log("There was an error");
@@ -331,7 +256,7 @@ function useIndexedDb(databaseName, storeName, method, object) {
           resolve(all.result);
         };
       }
-      if (method === "clear"){
+      if (method === "clear") {
         store.clear();
       }
       tx.oncomplete = function () {
