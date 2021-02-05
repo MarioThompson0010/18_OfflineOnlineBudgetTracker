@@ -3,7 +3,9 @@
 ## Link to trying out the app and Screenshots:
 [Try out the Budget Tracker](https://damp-taiga-60393.herokuapp.com/)
 
-![Summary](https://github.com/MarioThompson0010/17_Workout_Tracker/blob/main/assets/Summary.PNG)
+![budget](https://github.com/MarioThompson0010/18_OfflineOnlineBudgetTracker/blob/main/screenshots/budget.PNG)
+
+![Offline](https://github.com/MarioThompson0010/18_OfflineOnlineBudgetTracker/blob/main/screenshots/Offliner.PNG)
 
 
 List of technologies and methodologies used:  npm, Javascript, Heroku, PWA, cached storage
