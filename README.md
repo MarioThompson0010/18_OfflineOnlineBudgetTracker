@@ -18,7 +18,7 @@ You can run on Heroku or on your computer. If you're running locally you can do 
 Open up a terminal and do "npm i" to install the packages. Type "node server.js" to get the server to run.
 
 On your local machine or on Heroku, open up a browser and press F12.  Clear all the cache.  
-Do this by selecting the Application tab.  Select Storage, on the left hand side, near the top.  Now click "Clear site data". Close F12.
+Do this by selecting the Application tab.  Select Storage, on the left hand side, near the top.  Now click "Clear site data" twice. Close F12.
 
 From your terminal, type "node server.js".  Go to localhost:3000. Press F5 to refresh.  Store a couple of transactions. These will be stored to the database.  Now press F12.  On the Application tab, click on "Service Workers".  Put yourself in offline mode by checking the Offline checkbox.  Do a couple more transactions.  Now uncheck the Offline checkbox.  The transactions you did are now stored to the database.  Verify this by pressing F5.
 
